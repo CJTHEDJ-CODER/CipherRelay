@@ -1,35 +1,34 @@
-// =============================================================
-// Cipher — local-first, end-to-end encrypted 1:1 chat
-// =============================================================
-// Security model:
-//  - Each device generates its own long-term ECDH (P-256) identity
-//    keypair on first run. Private key stored non-extractable in
-//    IndexedDB -- usable by this browser, never exportable again.
-//  - Adding a friend = share a short invite code through ANY channel
-//    (text, email, in person) -- it only contains a public key, which
-//    isn't secret. After pairing, a "safety number" is shown; read it
-//    aloud to each other (call/video) to confirm nobody tampered with
-//    the code in transit.
-//  - Every chat SESSION (each time you open a chat / reconnect) does
-//    a fresh Diffie-Hellman handshake using new ephemeral keys before
-//    any message can be sent. This means even if one session's keys
-//    were ever compromised, past and future sessions stay secure
-//    (post-compromise security / healing).
-//  - Within a session, every single message is encrypted with its own
-//    key, pulled from a one-way ratcheting chain -- so recovering one
-//    message's key never reveals any other message's key (forward
-//    secrecy).
-//  - The relay server only ever forwards already-encrypted bytes
-//    between a room ID derived from both public keys. It cannot read
-//    messages, and never logs or stores anything to disk.
-//  - Message history is OFF by default. If enabled in Settings, it's
-//    kept only in this browser's local storage -- never uploaded.
-//
-// Honest limits: this protects message CONTENT very seriously. It does
-// not hide metadata (that you and a contact talk, when, how often) from
-// whoever operates your relay server, and it's a from-scratch build,
-// not an independently audited one like Signal's -- treat it as strong
-// hobbyist-grade security, not a guarantee against nation-state actors.
+# =============================================================
+# Cipher — local-first, end-to-end encrypted 1:1 chat
+# =============================================================
+# Security model:
+#  - Each device generates its own long-term ECDH (P-256) identity
+#    keypair on first run. Private key stored non-extractable in
+#    IndexedDB -- usable by this browser, never exportable again.
+#  - Adding a friend = share a short invite code through ANY channel
+#    (text, email, in person) -- it only contains a public key, which
+#    isn't secret. After pairing, a "safety number" is shown; read it
+#    aloud to each other (call/video) to confirm nobody tampered with
+#    the code in transit.
+#  - Every chat SESSION (each time you open a chat / reconnect) does
+#    a fresh Diffie-Hellman handshake using new ephemeral keys before
+#    any message can be sent. This means even if one session's keys
+#    were ever compromised, past and future sessions stay secure
+#    (post-compromise security / healing).
+#  - Within a session, every single message is encrypted with its own
+#    key, pulled from a one-way ratcheting chain -- so recovering one
+#   message's key never reveals any other message's key (forward
+#    secrecy).
+#  - The relay server only ever forwards already-encrypted bytes
+#    between a room ID derived from both public keys. It cannot read
+#    messages, and never logs or stores anything to disk.
+#  - Message history is OFF by default. If enabled in Settings, it's
+#    kept only in this browser's local storage -- never uploaded.
+#
+# Honest limits: this protects message CONTENT very seriously. It does
+# not hide metadata (that you and a contact talk, when, how often) from
+# not an independently audited one like Signal's -- treat it as strong
+# hobbyist-grade security, not a guarantee against nation-state actors.
 
 const enc = new TextEncoder();
 const dec = new TextDecoder();
