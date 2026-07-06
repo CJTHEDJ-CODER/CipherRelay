@@ -33,9 +33,9 @@
 const enc = new TextEncoder();
 const dec = new TextDecoder();
 
-// ---------------------------------------------------------------
-// IndexedDB
-// ---------------------------------------------------------------
+# ---------------------------------------------------------------
+# IndexedDB
+# ---------------------------------------------------------------
 const DB_NAME = 'cipher-db';
 const DB_VERSION = 1;
 
@@ -105,9 +105,9 @@ async function idbClearAll() {
   });
 }
 
-// ---------------------------------------------------------------
-// base64 helpers
-// ---------------------------------------------------------------
+# ---------------------------------------------------------------
+# base64 helpers
+# ---------------------------------------------------------------
 function bufToB64(buf) {
   const bytes = new Uint8Array(buf);
   let bin = '';
@@ -130,9 +130,9 @@ function concatBufs(...parts) {
   return out.buffer;
 }
 
-// ---------------------------------------------------------------
-// Identity (long-term ECDH keypair, one per device)
-// ---------------------------------------------------------------
+# ---------------------------------------------------------------
+# Identity (long-term ECDH keypair, one per device)
+# ---------------------------------------------------------------
 let myIdentity = null; // { privateKey: CryptoKey (non-extractable), publicKeyRaw: base64 }
 
 async function ensureIdentity() {
@@ -181,13 +181,13 @@ async function safetyNumberFor(longtermSharedBits) {
   return groups.join('  ');
 }
 
-// ---------------------------------------------------------------
-// Ratchet: per-session handshake + per-message forward-secret chain
-// ---------------------------------------------------------------
-// One RatchetSession object lives for as long as a chat screen is open.
-// Opening the chat again later (even with the same contact) makes a
-// brand new one with fresh ephemeral keys -- that's what gives us
-// healing between sessions.
+# ---------------------------------------------------------------
+# Ratchet: per-session handshake + per-message forward-secret chain
+# ---------------------------------------------------------------
+# One RatchetSession object lives for as long as a chat screen is open.
+# Opening the chat again later (even with the same contact) makes a
+# brand new one with fresh ephemeral keys -- that's what gives us
+# healing between sessions.
 class RatchetSession {
   constructor(contact) {
     this.contact = contact;
@@ -263,9 +263,9 @@ async function getSetting(key, fallback) {
 }
 async function setSetting(key, value) { await idbPut('settings', { key, value }); }
 
-// ---------------------------------------------------------------
-// UI navigation
-// ---------------------------------------------------------------
+# ---------------------------------------------------------------
+# UI navigation
+# ---------------------------------------------------------------
 function show(screenId) {
   document.querySelectorAll('.screen').forEach(el => el.classList.add('hidden'));
   document.getElementById(screenId).classList.remove('hidden');
@@ -283,9 +283,9 @@ function escapeHtml(s) {
   return d.innerHTML;
 }
 
-// ---------------------------------------------------------------
-// Contacts list
-// ---------------------------------------------------------------
+# ---------------------------------------------------------------
+# Contacts list
+# ---------------------------------------------------------------
 async function renderContacts() {
   const list = document.getElementById('contact-list');
   const contacts = await idbGetAll('contacts');
@@ -309,9 +309,9 @@ async function renderContacts() {
   });
 }
 
-// ---------------------------------------------------------------
-// Add friend: invite code flow (no camera, works across the world)
-// ---------------------------------------------------------------
+# ---------------------------------------------------------------
+# Add friend: invite code flow (no camera, works across the world)
+# ---------------------------------------------------------------
 const INVITE_PREFIX = 'CIPHER1-';
 
 function buildInviteCode() {
@@ -410,9 +410,6 @@ document.getElementById('btn-save-contact').addEventListener('click', async () =
   renderContacts();
 });
 
-// ---------------------------------------------------------------
-// Chat
-// ---------------------------------------------------------------
 let activeContact = null;
 let activeSocket = null;
 let activeSession = null;
@@ -539,9 +536,9 @@ async function sendCurrentMessage() {
   input.value = '';
 }
 
-// ---------------------------------------------------------------
-// Settings screen
-// ---------------------------------------------------------------
+# ---------------------------------------------------------------
+# Settings screen
+# ---------------------------------------------------------------
 document.getElementById('btn-open-settings').addEventListener('click', async () => {
   document.getElementById('relay-input').value = await getSetting('relayUrl', '');
   document.getElementById('toggle-history').checked = await getSetting('keepHistory', false);
@@ -561,10 +558,9 @@ document.getElementById('btn-wipe').addEventListener('click', async () => {
   await idbClearAll();
   location.reload();
 });
-
-// ---------------------------------------------------------------
-// Boot
-// ---------------------------------------------------------------
+# ---------------------------------------------------------------
+# Boot
+# ---------------------------------------------------------------
 (async function boot() {
   await ensureIdentity();
   await renderContacts();
